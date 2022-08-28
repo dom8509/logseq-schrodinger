@@ -92,12 +92,35 @@ async function parseMeta(
   if (curPage?.page.properties != undefined) {
     propList = curPage?.page.properties;
   }
+
   //Title
-  //FIXME is filename used?
-  propList.title = curPage.page["original-name"];
-  if (titleDetails.length > 0) {
-    propList.title = titleDetails[0].noteName;
-    propList.fileName = titleDetails[1].hugoFileName;
+  let origName = curPage.page["original-name"];
+  if (logseq.settings.trimNamespaces) {
+    let origNameSplit = origName.split("/");
+
+    console.log(`origName: ${origName}`);
+    console.log(`origNameSplit.length: ${origNameSplit.length}`);
+    propList.title = origNameSplit.pop();
+
+    if (origNameSplit.length > 0) {
+      console.log(origNameSplit);
+      if (origNameSplit.length > 1) {
+        console.log('join');
+        propList.namespace = origNameSplit.join("/");
+      } else {
+        console.log('no join');
+        propList.namespace = origNameSplit.toString();;
+      }
+    } else {
+      console.log("Page has no namespace");
+    }
+  } else {
+    //FIXME is filename used?
+    propList.title = origName;
+    if (titleDetails.length > 0) {
+      propList.title = titleDetails[0].noteName;
+      propList.fileName = titleDetails[1].hugoFileName;
+    }
   }
 
   //Tags
