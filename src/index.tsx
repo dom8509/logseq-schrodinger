@@ -1,14 +1,13 @@
-import "@logseq/libs";
-import {
-  PageEntity,
-  BlockEntity,
-  SettingSchemaDesc,
-} from "@logseq/libs/dist/LSPlugin";
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import { handleClosePopup } from "./handleClosePopup";
-import { getAllPublicPages, getBlocksInPage } from "./utils";
+import '@logseq/libs';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import { BlockEntity, PageEntity, SettingSchemaDesc } from '@logseq/libs/dist/LSPlugin';
+
+import App from './App';
+import { handleClosePopup } from './handleClosePopup';
+import { getAllPublicPages, getBlocksInPage } from './utils';
 
 export var path = "";
 
@@ -20,7 +19,7 @@ let settings: SettingSchemaDesc[] = [
     type: "enum",
     enumChoices: linkFormats,
     enumPicker: "radio",
-    title: "How would you like links to be formatted",
+    title: "How would you like links to be formatted?",
     description:
       "Do you want your exported links with or without brackets? If a page that is linked to is public, the link will automatically be hyperlinked in the hugo export, otherwise, this setting will be applied",
     default: linkFormats[0],
@@ -30,7 +29,7 @@ let settings: SettingSchemaDesc[] = [
     type: "enum",
     enumChoices: ["Convert Bullets", "Remove All Bullets"], 
     enumPicker: "radio",
-    title: "How would you like Logseq's bullets to be handled",
+    title: "How would you like Logseq's bullets to be handled?",
     description: "How would you like Logseq's bullets to be handled, convert to hugo's native style or remove all bullets?",
     default: "Convert Bullets",
   },
@@ -39,6 +38,13 @@ let settings: SettingSchemaDesc[] = [
     type: "boolean",
     title: "Do you want tasks to exported to Hugo?",
     description: "Yes, blocks with tasks will be exported: (TODO DOING DONE LATER NOW WAITING)",
+    default: false,
+  },
+  {
+    key: "trimNamespaces",
+    type: "boolean",
+    title: "Do you want to trim Namespaces in the text?",
+    description: "If selected, all visual namespaces will be trimed (eg: ns1/block1 -> block1).",
     default: false,
   }
 

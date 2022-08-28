@@ -307,20 +307,28 @@ function parseLinks(text: string, allPublicPages) {
   // Regular links are done by Hugo [logseq](https://logseq.com)
   const reLink:RegExp      = /\[\[(.*?)\]\]/gmi
   const reDescrLink:RegExp = /\[([a-zA-Z ]*?)\]\(\[\[(.*?)\]\]\)/gmi
+  const reNsLink:RegExp    = /\[\[([^\/]*\/).*\]\]/gmi
 
   // FIXME why doesn't this work?
   // if (! reDescrLink.test(text) && ! reLink.test(text)) return text
   
   let result
-  while(result = (reDescrLink.exec(text) || reLink.exec(text))) {
+  while (result = (reDescrLink.exec(text) || reLink.exec(text))) {
     if (allPublicLinks.includes(result[result.length - 1].toLowerCase())) {
       text = text.replace(result[0],`[${result[1]}]({{< ref "/pages/${result[result.length - 1]}" >}})`)
     }
-  } 
-    if (logseq.settings.linkFormat == "Without brackets") {
-      text = text.replaceAll("[[", "");
-      text = text.replaceAll("]]", "");
+
+    if ((result = reNsLink.exec(result[0])) && logseq.settings.trimNamespaces) {
+      console.log(`Found Namespace ${result[1]}`);
+      text = text.replace(result[1],"");
     }
+  } 
+
+  if (logseq.settings.linkFormat == "Without brackets") {
+    text = text.replaceAll("[[", "");
+    text = text.replaceAll("]]", "");
+  }
+
   return text
 }
 
